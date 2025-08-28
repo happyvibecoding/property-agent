@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { ProtectedRoute } from '@/components/protected-route'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { PropertyCard } from '@/components/properties/property-card'
+import { ConversationList } from '@/components/conversation-list'
+import { AddPropertyModal } from '@/components/add-property-modal'
 import { Building, PlusCircle, MessageCircle, Mail } from 'lucide-react'
 
 // Mock data - in real app this would come from API
@@ -55,8 +56,9 @@ const mockConversations = [
 
 export default function DashboardPage() {
   const [emailCopied, setEmailCopied] = useState<string | null>(null)
-  const hasProperties = mockProperties.length > 0
-  const hasConversations = mockConversations.length > 0
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [properties, setProperties] = useState(mockProperties)
+  const hasProperties = properties.length > 0
 
   const handleCopyEmail = async (email: string) => {
     await navigator.clipboard.writeText(email)
@@ -80,12 +82,31 @@ export default function DashboardPage() {
     }, 3000)
   }
 
-  const handleEditProperty = (propertyId: string) => {
-    console.log('Edit property:', propertyId)
-  }
 
   const handleViewPipeline = (propertyId: string) => {
     console.log('View pipeline:', propertyId)
+  }
+
+  const handleAddProperty = (propertyData: any) => {
+    const newProperty = {
+      id: Date.now().toString(),
+      address: propertyData.address,
+      city: propertyData.city,
+      state: propertyData.state,
+      zipCode: propertyData.zipCode,
+      rent: propertyData.rent,
+      bedrooms: propertyData.bedrooms,
+      bathrooms: propertyData.bathrooms,
+      status: 'available' as const,
+      image: '',
+      email: `property-${propertyData.address.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, '').slice(0, 20)}@airent.com`,
+      applications: 0,
+      messages: 0,
+      views: 0,
+      isOccupied: false,
+      description: `${propertyData.bedrooms}BR/${propertyData.bathrooms}BA property at ${propertyData.address}`
+    }
+    setProperties([...properties, newProperty])
   }
 
   return (
@@ -105,19 +126,21 @@ export default function DashboardPage() {
             <div className="lg:col-span-2 space-y-6">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold text-gray-900">Your Properties</h2>
-                <Button className="bg-blue-600 hover:bg-blue-700">
+                <Button 
+                  onClick={() => setShowAddModal(true)}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
                   <PlusCircle className="w-4 h-4 mr-2" />
                   Add Property
                 </Button>
               </div>
               
               <div className="grid gap-6">
-                {mockProperties.map((property) => (
+                {properties.map((property) => (
                   <PropertyCard
                     key={property.id}
                     property={property}
                     onCopyEmail={handleCopyEmail}
-                    onEdit={handleEditProperty}
                     onViewPipeline={handleViewPipeline}
                   />
                 ))}
@@ -125,47 +148,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Conversations Section */}
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-900">Active Conversations</h2>
-                <span className="text-sm text-gray-500">{mockConversations.length} total</span>
-              </div>
-              
-              {hasConversations ? (
-                <div className="space-y-3">
-                  {mockConversations.map((conversation) => (
-                    <Link key={conversation.id} href={`/conversation/${conversation.id}`}>
-                      <Card className="p-4 hover:shadow-md transition-shadow cursor-pointer border-l-4 border-l-blue-500">
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <h3 className="font-medium text-gray-900">{conversation.applicantName}</h3>
-                            {conversation.hasAIDraft && (
-                              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                                AI Draft Ready
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-sm text-gray-600 truncate">{conversation.subject}</p>
-                          <p className="text-xs text-gray-500">{conversation.lastMessage}</p>
-                          <div className="flex items-center justify-between text-xs text-gray-400">
-                            <span>{conversation.timestamp}</span>
-                            {conversation.unread && (
-                              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                            )}
-                          </div>
-                        </div>
-                      </Card>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <Card className="text-center py-8">
-                  <MessageCircle className="w-8 h-8 text-gray-400 mx-auto mb-3" />
-                  <p className="text-gray-500">No conversations yet</p>
-                  <p className="text-sm text-gray-400 mt-1">Share your property email to start receiving inquiries</p>
-                </Card>
-              )}
-            </div>
+            <ConversationList conversations={mockConversations} />
           </div>
         ) : (
           /* Empty State */
@@ -180,7 +163,11 @@ export default function DashboardPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+              <Button 
+                size="lg" 
+                onClick={() => setShowAddModal(true)}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
                 <PlusCircle className="w-5 h-5 mr-2" />
                 Add Your First Property
               </Button>
@@ -199,6 +186,13 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         )}
+        
+        {/* Add Property Modal */}
+        <AddPropertyModal
+          isOpen={showAddModal}
+          onClose={() => setShowAddModal(false)}
+          onAdd={handleAddProperty}
+        />
       </div>
     </ProtectedRoute>
   )

@@ -1,129 +1,150 @@
 'use client'
 
 import { useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { ProtectedRoute } from '@/components/protected-route'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { MessageThread } from '@/components/inbox/message-thread'
 import { AIResponsePanel } from '@/components/ai-response-panel'
-import { ArrowLeft, User, Building, Clock } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { ArrowLeft, User } from 'lucide-react'
 
-// Mock data - in real app this would come from API
+// Mock data - in real app would fetch based on conversation ID
 const mockConversation = {
   id: '1',
   propertyId: '1',
-  property: {
-    address: '123 Main Street',
-    city: 'San Francisco',
-    state: 'CA'
-  },
-  applicant: {
-    name: 'Sarah Johnson',
-    email: 'sarah.johnson@email.com'
-  },
+  propertyAddress: '123 Main Street',
+  propertyEmail: 'property-123main@airent.com',
+  applicantName: 'Sarah Johnson',
+  applicantEmail: 'sarah.johnson@email.com',
+  subject: 'Interested in 2BR apartment',
   messages: [
     {
       id: '1',
       from: 'sarah.johnson@email.com',
       to: 'property-123main@airent.com',
       subject: 'Interested in 2BR apartment',
-      content: 'Hi! I saw your listing for the 2BR apartment and I\'m very interested. Could you tell me more about the neighborhood and when I could schedule a viewing?',
-      timestamp: '2024-01-15 10:30 AM',
+      content: `Hi there,
+
+I'm very interested in the 2-bedroom apartment at 123 Main Street that I saw listed online. The photos look great and the location seems perfect for my commute.
+
+When would be a good time to schedule a viewing? I'm available most afternoons this week and flexible on weekends.
+
+Also, could you tell me:
+- What's the move-in timeline?
+- Are pets allowed?
+- What utilities are included in rent?
+
+Looking forward to hearing from you!
+
+Best regards,
+Sarah Johnson
+(555) 123-4567`,
+      timestamp: '2 hours ago',
       type: 'received' as const
     }
-  ],
-  aiDraft: {
-    subject: 'Re: Interested in 2BR apartment',
-    content: 'Hi Sarah,\n\nThank you for your interest in our 2BR apartment at 123 Main Street! I\'d be happy to help you learn more about the property and neighborhood.\n\nThe apartment is located in the heart of downtown San Francisco, within walking distance of excellent restaurants, shops, and public transportation. The building features modern amenities including in-unit laundry, updated kitchen appliances, and a rooftop deck with city views.\n\nFor scheduling a viewing, I have availability this week on:\n- Wednesday at 2:00 PM or 4:00 PM\n- Thursday at 10:00 AM or 3:00 PM\n- Saturday at 11:00 AM or 2:00 PM\n\nPlease let me know which time works best for you, and feel free to ask any other questions you might have!\n\nBest regards,\nProperty Management Team',
-    confidence: 92,
-    tone: 'Professional and welcoming'
-  }
+  ]
+}
+
+const mockAIResponse = {
+  subject: 'Re: Interested in 2BR apartment',
+  content: `Hi Sarah,
+
+Thank you for your interest in our beautiful 2-bedroom apartment at 123 Main Street! I'm delighted to hear it caught your eye.
+
+I'd be happy to schedule a viewing for you. Based on your availability, how about this Thursday afternoon around 3 PM? If that doesn't work, I also have slots available Friday at 2 PM or Saturday morning at 10 AM.
+
+To answer your questions:
+• Move-in timeline: The unit is available for immediate occupancy
+• Pets: Yes, we welcome pets with a $300 pet deposit (cats and dogs under 50lbs)
+• Utilities: Water, sewer, and trash are included. Electricity and gas are tenant responsibility
+
+The monthly rent is $3,500 and we require first month, last month, and security deposit equal to one month's rent.
+
+Please let me know which viewing time works best for you, and I'll send you the address and parking instructions.
+
+Best regards,
+Property Management Team
+123 Main Street Apartments`,
+  confidence: 92,
+  tone: 'Professional & Welcoming'
 }
 
 export default function ConversationPage() {
   const params = useParams()
-  const router = useRouter()
-  const [aiResponse, setAiResponse] = useState(mockConversation.aiDraft)
-  const [isEditingResponse, setIsEditingResponse] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [currentResponse, setCurrentResponse] = useState(mockAIResponse)
 
-  const handleSendResponse = () => {
-    console.log('Sending response:', aiResponse)
-    // In real app, this would send the email and update the conversation
-    router.push('/dashboard')
+  const handleSend = () => {
+    // In real app, would send the email
+    console.log('Sending response:', currentResponse)
   }
 
-  const handleRegenerateResponse = () => {
-    console.log('Regenerating AI response...')
-    // In real app, this would call the AI service to generate a new response
-    setAiResponse({
-      ...aiResponse,
-      content: aiResponse.content + '\n\n[Regenerated response would appear here]',
+  const handleEdit = () => {
+    setIsEditing(!isEditing)
+  }
+
+  const handleRegenerate = () => {
+    // In real app, would call AI API to regenerate
+    setCurrentResponse({
+      ...currentResponse,
       confidence: Math.floor(Math.random() * 20) + 80
     })
   }
 
-  const handleEditResponse = () => {
-    setIsEditingResponse(!isEditingResponse)
+  const handleResponseChange = (response: typeof mockAIResponse) => {
+    setCurrentResponse(response)
   }
 
   return (
     <ProtectedRoute>
-      <div className="h-screen flex flex-col">
+      <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <div className="border-b bg-white px-6 py-4">
+        <div className="bg-white border-b border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/dashboard">
+              <Link href="/dashboard">
+                <Button variant="ghost" size="sm">
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Back to Dashboard
-                </Link>
-              </Button>
-              <div className="flex items-center space-x-2">
-                <User className="w-4 h-4 text-gray-500" />
-                <span className="font-medium">{mockConversation.applicant.name}</span>
-                <span className="text-gray-400">•</span>
-                <Building className="w-4 h-4 text-gray-500" />
-                <span className="text-sm text-gray-600">
-                  {mockConversation.property.address}, {mockConversation.property.city}
-                </span>
+                </Button>
+              </Link>
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <User className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <h1 className="text-lg font-semibold text-gray-900">
+                    {mockConversation.applicantName}
+                  </h1>
+                  <p className="text-sm text-gray-500">
+                    {mockConversation.propertyAddress}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Clock className="w-4 h-4 text-gray-400" />
-              <span className="text-sm text-gray-500">Last activity: 2 hours ago</span>
             </div>
           </div>
         </div>
 
-        {/* Main Content - 3 Panel Layout */}
-        <div className="flex-1 flex overflow-hidden">
-          {/* Left Sidebar - Conversation List (optional for future) */}
-          {/* <div className="w-80 border-r bg-gray-50">
-            // Conversation list would go here
-          </div> */}
-
-          {/* Center Panel - Message Thread */}
-          <div className="flex-1 flex flex-col">
-            <div className="flex-1 overflow-y-auto p-6">
-              <MessageThread 
-                messages={mockConversation.messages}
-                propertyEmail="property-123main@airent.com"
-              />
-            </div>
+        {/* Main Content - 3 panel layout */}
+        <div className="flex h-[calc(100vh-80px)]">
+          {/* Message Thread - Center Panel */}
+          <div className="flex-1 overflow-y-auto p-6">
+            <MessageThread
+              messages={mockConversation.messages}
+              propertyEmail={mockConversation.propertyEmail}
+            />
           </div>
 
-          {/* Right Panel - AI Response */}
-          <div className="w-96 border-l bg-gray-50 flex flex-col">
+          {/* AI Response Panel - Right Sidebar */}
+          <div className="w-96 border-l border-gray-200 bg-white">
             <AIResponsePanel
-              response={aiResponse}
-              isEditing={isEditingResponse}
-              onSend={handleSendResponse}
-              onEdit={handleEditResponse}
-              onRegenerate={handleRegenerateResponse}
-              onResponseChange={setAiResponse}
+              response={currentResponse}
+              isEditing={isEditing}
+              onSend={handleSend}
+              onEdit={handleEdit}
+              onRegenerate={handleRegenerate}
+              onResponseChange={handleResponseChange}
             />
           </div>
         </div>

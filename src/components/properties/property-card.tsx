@@ -5,12 +5,9 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { MagicEmailCopy } from '@/components/magic-email-copy'
 import { 
-  Edit, 
   MessageCircle, 
   Mail, 
-  Eye, 
-  MapPin,
-  MoreVertical
+  MapPin
 } from 'lucide-react'
 
 interface Property {
@@ -35,11 +32,10 @@ interface Property {
 interface PropertyCardProps {
   property: Property
   onCopyEmail: (email: string) => void
-  onEdit: (propertyId: string) => void
   onViewPipeline: (propertyId: string) => void
 }
 
-export function PropertyCard({ property, onCopyEmail, onEdit, onViewPipeline }: PropertyCardProps) {
+export function PropertyCard({ property, onCopyEmail, onViewPipeline }: PropertyCardProps) {
   const [isHovered, setIsHovered] = useState(false)
 
   const handleCopyEmail = async () => {
@@ -160,36 +156,18 @@ export function PropertyCard({ property, onCopyEmail, onEdit, onViewPipeline }: 
           </div>
         </div>
 
-        {/* Hover actions */}
-        <div className={`hover-actions flex gap-2 transition-all duration-200 ${
+        {/* Simplified action */}
+        <div className={`hover-actions transition-all duration-200 ${
           isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
         }`}>
           <Button
             size="sm"
             variant="outline"
-            onClick={() => onEdit(property.id)}
-            className="flex-1 hover:bg-blue-50 hover:border-blue-300"
-          >
-            <Edit className="w-3 h-3 mr-1" />
-            Edit
-          </Button>
-          
-          <Button
-            size="sm"
-            variant="outline"
             onClick={() => onViewPipeline(property.id)}
-            className="flex-1 hover:bg-green-50 hover:border-green-300"
+            className="w-full hover:bg-blue-50 hover:border-blue-300"
           >
-            <MessageCircle className="w-3 h-3 mr-1" />
-            Messages
-          </Button>
-          
-          <Button
-            size="sm"
-            variant="outline"
-            className="px-2 hover:bg-gray-50 hover:border-gray-300"
-          >
-            <MoreVertical className="w-3 h-3" />
+            <MessageCircle className="w-4 h-4 mr-2" />
+            View AI Conversations
           </Button>
         </div>
       </CardContent>

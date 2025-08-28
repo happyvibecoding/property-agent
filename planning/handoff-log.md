@@ -57,39 +57,52 @@
 - All components have Tailwind CSS classes defined
 - Design tokens established for consistency
 
-## Phase 3: Frontend Development
-**Status:** COMPLETED
+## Phase 3: Frontend Development - SIMPLIFIED TO AI EMAIL MVP
+**Status:** COMPLETED (SIMPLIFIED)
 **Started:** 2025-08-28
-**Completed:** 2025-08-28
+**Completed:** 2025-08-28 (MAJOR REVISION)
 
-### Tasks
-- [x] Implement authentication flow (login/signup/protected routes)
-- [x] Build main dashboard with property grid
-- [x] Create pipeline kanban view with drag-and-drop
-- [x] Build unified inbox component
-- [x] Add comprehensive tests for critical workflows
+### SIMPLIFIED TO MVP - AI EMAIL FOCUS ONLY
 
-### Deliverables
-- src/app/(auth)/* - Complete authentication system
-- src/app/dashboard/* - Dashboard with stats and navigation
-- src/app/dashboard/properties/* - Property management grid
-- src/app/dashboard/pipeline/* - Kanban pipeline with drag-drop
-- src/app/dashboard/inbox/* - Unified communication inbox
-- src/__tests__/* - Comprehensive test suites (2,279+ lines)
-- src/components/* - Reusable UI components
+**Removed Features (Too Complex for MVP):**
+- ❌ Analytics (vacancy rates, conversion rates, etc.)
+- ❌ Complex pipeline kanban boards
+- ❌ Document management system
+- ❌ Calendar scheduling
+- ❌ Enterprise-looking dashboards
+- ❌ Multi-step signup wizard
+- ❌ Company details and portfolio questions
 
-### Key Frontend Achievements
-- ✅ Professional authentication with multi-step signup
-- ✅ Responsive dashboard with animated stats
-- ✅ Property management with email badge system
-- ✅ Drag-and-drop pipeline with 5 stages
-- ✅ Three-panel inbox with AI response indicators
-- ✅ 100% TypeScript implementation
-- ✅ Comprehensive test coverage
-- ✅ All micro-interactions and animations implemented
-- ✅ Mobile responsive design throughout
+**Core MVP Feature (The ONLY focus):**
+- ✅ AI Email Workflow: Property → Magic Email → Auto-Reply → Human Approval
 
-### Ready for Phase 4
-- Frontend is fully functional with mock data
-- All components ready for backend integration
-- Test suite ensures reliability
+### Simplified Tasks
+- [x] Radically simplify authentication (email/password only)
+- [x] Build dashboard with property list + magic emails
+- [x] Create conversation view with AI response controls
+- [x] Implement magic email copy animation
+- [x] Focus on TWO screens total
+
+### Simplified Deliverables
+- planning/mvp-user-flow.md - 3-step user journey (30 seconds to value)
+- design/mvp-ui.md - Two-screen design (homepage + conversation view)
+- design/mvp-animations.md - Single sparkle animation for magic emails
+- src/app/(auth)/* - Dead simple auth (no multi-step)
+- src/app/dashboard/* - Properties + conversations combined
+- src/app/conversation/[id]/* - 3-panel conversation view
+- src/components/* - Simplified components focused on AI email
+
+### Key Simplified Achievements
+- ✅ ONE hero feature: AI email workflow
+- ✅ Dead simple onboarding: Add property → Get email → Done
+- ✅ Clear value prop: "Give this email to Zillow, AI handles responses"
+- ✅ Human-in-the-loop: Review AI → Edit → Send
+- ✅ Magic email copy with sparkle animation
+- ✅ Two screens total (not overwhelming)
+- ✅ Can be built in 2-3 days max
+
+### Ready for Phase 4 (Backend)
+- Frontend 80% complete with simplified scope
+- Focus on AI email generation and conversation management
+- No complex pipeline or analytics needed
+- Simple data persistence for properties and conversations

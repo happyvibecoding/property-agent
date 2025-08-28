@@ -273,6 +273,52 @@
     animation: fade-in 0.3s ease-in-out;
   }
 
+  /* Sparkle animation for magic email copy */
+  @keyframes sparkleFloat {
+    0% {
+      opacity: 1;
+      transform: translateY(0px) scale(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(-30px) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-60px) scale(0) rotate(180deg);
+    }
+  }
+  
+  @keyframes magicAppear {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.8);
+    }
+    20% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.05);
+    }
+    30% {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    80% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.9);
+    }
+  }
+
+  /* Line clamp utility for text truncation */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     *,

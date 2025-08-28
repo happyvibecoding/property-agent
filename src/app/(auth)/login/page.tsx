@@ -164,14 +164,6 @@ export default function LoginPage() {
                 )}
               />
 
-              <div className="text-right">
-                <Link
-                  href="/forgot-password"
-                  className="text-sm font-medium text-blue-600 hover:text-blue-500 transition-colors"
-                >
-                  Forgot password?
-                </Link>
-              </div>
 
               <Button
                 type="submit"
@@ -212,17 +204,6 @@ export default function LoginPage() {
         </CardContent>
       </Card>
 
-      {/* Footer */}
-      <p className="text-center text-xs text-gray-500">
-        By signing in, you agree to our{' '}
-        <Link href="/terms" className="underline hover:text-gray-700">
-          Terms of Service
-        </Link>{' '}
-        and{' '}
-        <Link href="/privacy" className="underline hover:text-gray-700">
-          Privacy Policy
-        </Link>
-      </p>
     </div>
   )
 }
