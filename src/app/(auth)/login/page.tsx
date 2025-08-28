@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
 import { useAuth } from '@/contexts/auth-context'
 import { useToast } from '@/components/ui/toast'
 
@@ -24,13 +23,11 @@ const loginSchema = z.object({
     .string()
     .min(1, 'Password is required')
     .min(6, 'Password must be at least 6 characters'),
-  rememberMe: z.boolean(),
 })
 
 type LoginFormData = {
   email: string
   password: string
-  rememberMe: boolean
 }
 
 export default function LoginPage() {
@@ -44,7 +41,6 @@ export default function LoginPage() {
     defaultValues: {
       email: '',
       password: '',
-      rememberMe: false,
     },
   })
 
@@ -77,7 +73,7 @@ export default function LoginPage() {
           Welcome back
         </h2>
         <p className="mt-2 text-sm text-gray-600">
-          Sign in to your account to continue managing your properties
+          Sign in to access your AI email management dashboard
         </p>
       </div>
 
@@ -86,7 +82,7 @@ export default function LoginPage() {
         <CardHeader className="space-y-1 pb-4">
           <CardTitle className="text-xl font-semibold">Sign in</CardTitle>
           <CardDescription>
-            Enter your credentials to access your dashboard
+            Access your properties and AI-powered conversations
           </CardDescription>
         </CardHeader>
         
@@ -168,28 +164,7 @@ export default function LoginPage() {
                 )}
               />
 
-              <div className="flex items-center justify-between">
-                <FormField
-                  control={form.control}
-                  name="rememberMe"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                      <FormControl>
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                          disabled={isLoading}
-                        />
-                      </FormControl>
-                      <div className="space-y-1 leading-none">
-                        <FormLabel className="text-sm font-normal cursor-pointer">
-                          Remember me
-                        </FormLabel>
-                      </div>
-                    </FormItem>
-                  )}
-                />
-
+              <div className="text-right">
                 <Link
                   href="/forgot-password"
                   className="text-sm font-medium text-blue-600 hover:text-blue-500 transition-colors"
@@ -221,7 +196,7 @@ export default function LoginPage() {
               <div className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">New to Property Pro?</span>
+              <span className="px-2 bg-white text-gray-500">New to AI email management?</span>
             </div>
           </div>
 

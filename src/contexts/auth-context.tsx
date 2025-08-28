@@ -22,8 +22,7 @@ interface AuthContextType {
 interface RegisterData {
   email: string
   password: string
-  name: string
-  companyName?: string
+  propertyAddress: string
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -96,9 +95,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const mockUser: User = {
         id: Date.now().toString(),
         email: userData.email,
-        name: userData.name,
+        name: userData.email.split('@')[0], // Use email prefix as name for now
         role: 'landlord'
       }
+      
+      // Store property data for later use
+      localStorage.setItem('first_property', userData.propertyAddress)
       
       // Store auth data
       localStorage.setItem('auth_token', 'mock_token_' + Date.now())

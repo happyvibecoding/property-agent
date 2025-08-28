@@ -4,8 +4,8 @@ import { AuthProvider } from "@/contexts/auth-context";
 import { ToastProvider } from "@/components/ui/toast";
 
 export const metadata: Metadata = {
-  title: "Tenant Management Platform",
-  description: "Professional property management made simple",
+  title: "AI Email Pro - Automated Property Management",
+  description: "AI-powered email management for property managers. Get intelligent responses to tenant inquiries.",
 };
 
 export default function RootLayout({

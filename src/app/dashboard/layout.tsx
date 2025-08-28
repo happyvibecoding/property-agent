@@ -1,59 +1,57 @@
 'use client'
 
-import { useState } from 'react'
-import { Sidebar } from '@/components/navigation/sidebar'
-import { MobileMenu } from '@/components/navigation/mobile-menu'
-import { Breadcrumb } from '@/components/navigation/breadcrumb'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { useAuth } from '@/contexts/auth-context'
+import { LogOut, User } from 'lucide-react'
 
 interface DashboardLayoutProps {
   children: React.ReactNode
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const { user, logout } = useAuth()
+  
+  const handleLogout = async () => {
+    await logout()
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar for desktop */}
-      <div className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0">
-        <Sidebar />
-      </div>
-
-      {/* Mobile menu */}
-      <MobileMenu open={sidebarOpen} setOpen={setSidebarOpen} />
-
-      {/* Main content area */}
-      <div className="lg:pl-64 flex flex-col flex-1">
-        {/* Top navigation with breadcrumbs */}
-        <div className="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200 lg:border-none">
-          <button
-            type="button"
-            className="px-4 border-r border-gray-200 text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 lg:hidden"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <span className="sr-only">Open sidebar</span>
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h8m-8 6h16" />
-            </svg>
-          </button>
-          
-          <div className="flex-1 px-4 flex justify-between items-center">
-            <Breadcrumb />
+    <div className="min-h-screen bg-gray-50">
+      {/* Simple top navigation */}
+      <header className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link href="/dashboard" className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-lg">✨</span>
+              </div>
+              <span className="text-xl font-semibold text-gray-900">AI Email Pro</span>
+            </Link>
             
-            {/* Mobile user info */}
-            <div className="lg:hidden flex items-center">
-              <span className="text-sm text-gray-700">Dashboard</span>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 text-sm text-gray-600">
+                <User className="w-4 h-4" />
+                <span>{user?.email}</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleLogout}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign out
+              </Button>
             </div>
           </div>
         </div>
+      </header>
 
-        {/* Page content */}
-        <main className="flex-1 pb-8">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {children}
-          </div>
-        </main>
-      </div>
+      {/* Page content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {children}
+      </main>
     </div>
   )
 }
